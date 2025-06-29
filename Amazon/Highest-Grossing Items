@@ -1,0 +1,15 @@
+Highest-Grossing Items
+
+WITH high_gross_table AS
+(SELECT category,product,
+SUM(spend) AS total_spend
+FROM product_spend
+WHERE transaction_date >= '2022-01-01' AND transaction_date <= '2022-12-31'
+GROUP BY category,product),
+
+rank_spend AS 
+(SELECT category,product,total_spend,
+RANK() OVER(PARTITION BY category ORDER BY total_spend DESC) AS rnk
+FROM high_gross_table)
+
+SELECT category,product,total_spend FROM rank_spend WHERE rnk <= 2 
