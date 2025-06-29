@@ -1,0 +1,21 @@
+Existing user not following top 100 topics
+
+WITH top_topics(
+SELECT * 
+FROM
+ topic_rankings
+WHERE 
+ ranking_date = '2021-01-01'
+and ranking <= 100
+)
+
+SELECT DISTINCT user_id
+FROM user_topics
+WHERE follow_date <= '2021-01-01'
+MINUS
+SELECT
+ u.user_id
+FROM 
+ user_topics u
+JOIN top_topics t 
+ON u.topic_id = t.topic_id
